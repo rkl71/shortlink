@@ -1,6 +1,7 @@
 package com.hanyang.shortlink.admin.controller;
 
 import com.hanyang.shortlink.admin.common.convention.result.Result;
+import com.hanyang.shortlink.admin.common.convention.result.Results;
 import com.hanyang.shortlink.admin.common.enums.UserErrorCodeEnum;
 import com.hanyang.shortlink.admin.dto.resp.UserRespDTO;
 import com.hanyang.shortlink.admin.service.UserService;
@@ -27,7 +28,7 @@ public class UserController {
         if (result == null) {
             return new Result<UserRespDTO>().setCode(UserErrorCodeEnum.USER_NULL.code()).setMessage(UserErrorCodeEnum.USER_NULL.message());
         } else {
-            return new Result<UserRespDTO>().setCode("0").setData(result);
+            return Results.success(result);
         }
     }
 
