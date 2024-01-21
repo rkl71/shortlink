@@ -49,7 +49,7 @@ public class UserTransmitFilter implements Filter {
                 }
                 Object userInfoJsonStr;
                 try {
-                    userInfoJsonStr = stringRedisTemplate.opsForHash().get("login_yo" + username, token);
+                    userInfoJsonStr = stringRedisTemplate.opsForHash().get("login_" + username, token);
                     if (userInfoJsonStr == null) {
                         throw new ClientException(USER_TOKEN_FAIL);
                     }
