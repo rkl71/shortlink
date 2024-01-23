@@ -2,7 +2,7 @@ package com.hanyang.shortlink.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hanyang.shortlink.admin.common.convention.result.Result;
-import com.hanyang.shortlink.admin.remote.dto.ShortLinkRemoteService;
+import com.hanyang.shortlink.admin.remote.ShortLinkRemoteService;
 import com.hanyang.shortlink.admin.remote.dto.req.ShortLinkCreateReqDTO;
 import com.hanyang.shortlink.admin.remote.dto.req.ShortLinkPageReqDTO;
 import com.hanyang.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
