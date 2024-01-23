@@ -1,4 +1,4 @@
-package com.hanyang.shortlink.admin.remote.dto;
+package com.hanyang.shortlink.admin.remote;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
