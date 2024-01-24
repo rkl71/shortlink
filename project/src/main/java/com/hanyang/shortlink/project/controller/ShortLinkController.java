@@ -5,6 +5,7 @@ import com.hanyang.shortlink.project.common.convention.result.Result;
 import com.hanyang.shortlink.project.common.convention.result.Results;
 import com.hanyang.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.hanyang.shortlink.project.dto.req.ShortLinkPageReqDTO;
+import com.hanyang.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
 import com.hanyang.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
 import com.hanyang.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.hanyang.shortlink.project.dto.resp.ShortLinkPageRespDTO;
@@ -31,6 +32,12 @@ public class ShortLinkController {
         return Results.success(shortLinkService.createShortLink(requestParam));
     }
 
+    @PutMapping("/api/short-link/v1/update")
+    public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam) {
+        shortLinkService.updateShortLink(requestParam);
+        return Results.success();
+    }
+
     /**
      * 分页查询短链接
      */
@@ -43,7 +50,7 @@ public class ShortLinkController {
      * 查询短链接分组内数量
      */
     @GetMapping("/api/short-link/v1/count")
-    public Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(@RequestParam("requestParam") List<String> requestParam){
+    public Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(@RequestParam("requestParam") List<String> requestParam) {
         return Results.success(shortLinkService.listGroupShortLinkCount(requestParam));
     }
 }
