@@ -11,6 +11,12 @@ import java.util.Date;
  */
 @Data
 public class ShortLinkCreateReqDTO {
+
+    /**
+     * 协议
+     */
+    private String domainProtocol;
+
     /**
      * 域名
      */
@@ -39,7 +45,7 @@ public class ShortLinkCreateReqDTO {
     /**
      * 有效期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd  HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date validDate;
 
     /**
