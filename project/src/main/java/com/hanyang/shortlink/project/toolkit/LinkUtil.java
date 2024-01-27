@@ -19,7 +19,7 @@ public class LinkUtil {
      * @param validDate 有效期时间
      * @return 有效期时间戳
      */
-    public static long getLinkCacheValidDateTime(Date validDate) {
+    public static long getLinkCacheValidTime(Date validDate) {
         return Optional.ofNullable(validDate)
                 .map(each -> DateUtil.between(new Date(), each, DateUnit.MS))
                 .orElse(DEFAULT_CACHE_VALID_TIME);
