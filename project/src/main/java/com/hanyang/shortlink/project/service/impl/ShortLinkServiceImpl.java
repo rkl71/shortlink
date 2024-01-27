@@ -41,9 +41,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
-import static com.hanyang.shortlink.project.common.constant.RedisKeyConstant.LOCK_SKIP_SHORT_LINK_KEY;
-import static com.hanyang.shortlink.project.common.constant.RedisKeyConstant.SKIP_SHORT_LINK_KEY;
+import static com.hanyang.shortlink.project.common.constant.RedisKeyConstant.*;
 
 /**
  * 短链接接口实现层
@@ -181,6 +181,14 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             ((HttpServletResponse) response).sendRedirect(originalLink);
             return;
         }
+        boolean contains = shortUrlCreateCachePenetrationBloomFilter.contains(fullShortUrl);
+        if(!contains){
+            return;
+        }
+        String skipIsNullShortLink = stringRedisTemplate.opsForValue().get(String.format(SKIP_IS_NULL_SHORT_LINK_KEY, fullShortUrl));
+        if (StrUtil.isNotBlank(skipIsNullShortLink)){
+            return;
+        }
         RLock lock = redissonClient.getLock(String.format(LOCK_SKIP_SHORT_LINK_KEY, fullShortUrl));
         lock.lock();
         try {
@@ -193,6 +201,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkSkipDO::getFullShortUrl, fullShortUrl);
             ShortLinkSkipDO shortLinkSkipDO = shortLinkSkipMapper.selectOne(linkSkipQueryWrapper);
             if (shortLinkSkipDO == null) {
+                stringRedisTemplate.opsForValue().set(String.format(SKIP_IS_NULL_SHORT_LINK_KEY, fullShortUrl), "-", 30, TimeUnit.MINUTES);
                 return;
             }
             LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)

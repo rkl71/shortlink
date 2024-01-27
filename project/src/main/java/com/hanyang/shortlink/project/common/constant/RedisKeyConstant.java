@@ -11,6 +11,11 @@ public class RedisKeyConstant {
     public static final String SKIP_SHORT_LINK_KEY = "short-link_skip_%s";
 
     /**
+     * 短链接空值跳转前缀 Key
+     */
+    public static final String SKIP_IS_NULL_SHORT_LINK_KEY = "short-link_is-null_skip_%s";
+
+    /**
      * 短链接跳转锁前缀 Key
      */
     public static final String LOCK_SKIP_SHORT_LINK_KEY = "short-link_lock_skip_%s";
