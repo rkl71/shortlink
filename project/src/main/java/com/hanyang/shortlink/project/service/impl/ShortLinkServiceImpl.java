@@ -2,6 +2,7 @@ package com.hanyang.shortlink.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.StrBuilder;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -30,13 +31,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import static com.hanyang.shortlink.project.common.constant.RedisKeyConstant.LOCK_SKIP_SHORT_LINK_KEY;
+import static com.hanyang.shortlink.project.common.constant.RedisKeyConstant.SKIP_SHORT_LINK_KEY;
 
 /**
  * 短链接接口实现层
@@ -48,6 +55,8 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
 
     private final RBloomFilter<String> shortUrlCreateCachePenetrationBloomFilter;
     private final ShortLinkSkipMapper shortLinkSkipMapper;
+    private final StringRedisTemplate stringRedisTemplate;
+    private final RedissonClient redissonClient;
 
     @Override
     public ShortLinkCreateRespDTO createShortLink(ShortLinkCreateReqDTO requestParam) {
@@ -167,20 +176,37 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     public void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) {
         String serverName = request.getServerName();
         String fullShortUrl = serverName + "/" + shortUri;
-        LambdaQueryWrapper<ShortLinkSkipDO> linkSkipQueryWrapper = Wrappers.lambdaQuery(ShortLinkSkipDO.class)
-                .eq(ShortLinkSkipDO::getFullShortUrl, fullShortUrl);
-        ShortLinkSkipDO shortLinkSkipDO = shortLinkSkipMapper.selectOne(linkSkipQueryWrapper);
-        if (shortLinkSkipDO == null) {
+        String originalLink = stringRedisTemplate.opsForValue().get(String.format(SKIP_SHORT_LINK_KEY, fullShortUrl));
+        if (StrUtil.isNotBlank(originalLink)) {
+            ((HttpServletResponse) response).sendRedirect(originalLink);
             return;
         }
-        LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
-                .eq(ShortLinkDO::getGid, shortLinkSkipDO.getGid())
-                .eq(ShortLinkDO::getFullShortUrl, fullShortUrl)
-                .eq(ShortLinkDO::getDelFlag, 0)
-                .eq(ShortLinkDO::getEnableStatus, 0);
-        ShortLinkDO shortLinkDO = baseMapper.selectOne(queryWrapper);
-        if (shortLinkDO != null) {
-            ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
+        RLock lock = redissonClient.getLock(String.format(LOCK_SKIP_SHORT_LINK_KEY, fullShortUrl));
+        lock.lock();
+        try {
+            originalLink = stringRedisTemplate.opsForValue().get(String.format(SKIP_SHORT_LINK_KEY, fullShortUrl));
+            if (StrUtil.isNotBlank(originalLink)) {
+                ((HttpServletResponse) response).sendRedirect(originalLink);
+                return;
+            }
+            LambdaQueryWrapper<ShortLinkSkipDO> linkSkipQueryWrapper = Wrappers.lambdaQuery(ShortLinkSkipDO.class)
+                    .eq(ShortLinkSkipDO::getFullShortUrl, fullShortUrl);
+            ShortLinkSkipDO shortLinkSkipDO = shortLinkSkipMapper.selectOne(linkSkipQueryWrapper);
+            if (shortLinkSkipDO == null) {
+                return;
+            }
+            LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
+                    .eq(ShortLinkDO::getGid, shortLinkSkipDO.getGid())
+                    .eq(ShortLinkDO::getFullShortUrl, fullShortUrl)
+                    .eq(ShortLinkDO::getDelFlag, 0)
+                    .eq(ShortLinkDO::getEnableStatus, 0);
+            ShortLinkDO shortLinkDO = baseMapper.selectOne(queryWrapper);
+            if (shortLinkDO != null) {
+                stringRedisTemplate.opsForValue().set(String.format(SKIP_SHORT_LINK_KEY, fullShortUrl), shortLinkDO.getOriginUrl());
+                ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
