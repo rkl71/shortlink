@@ -24,6 +24,7 @@ import com.hanyang.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.hanyang.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 import com.hanyang.shortlink.project.service.ShortLinkService;
 import com.hanyang.shortlink.project.toolkit.HashUtil;
+import com.hanyang.shortlink.project.toolkit.LinkUtil;
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -93,6 +94,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 throw new ServiceException("短链接生成重复");
             }
         }
+        stringRedisTemplate.opsForValue().set(
+                String.format(SKIP_SHORT_LINK_KEY, fullShortUrl),
+                requestParam.getOriginUrl(),
+                LinkUtil.getLinkCacheValidDateTime(requestParam.getValidDate()), TimeUnit.MILLISECONDS
+        );
         shortUrlCreateCachePenetrationBloomFilter.add(fullShortUrl);
         return ShortLinkCreateRespDTO.builder()
                 .fullShortUrl("http://" + shortLinkDO.getFullShortUrl())
@@ -182,11 +188,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             return;
         }
         boolean contains = shortUrlCreateCachePenetrationBloomFilter.contains(fullShortUrl);
-        if(!contains){
+        if (!contains) {
             return;
         }
         String skipIsNullShortLink = stringRedisTemplate.opsForValue().get(String.format(SKIP_IS_NULL_SHORT_LINK_KEY, fullShortUrl));
-        if (StrUtil.isNotBlank(skipIsNullShortLink)){
+        if (StrUtil.isNotBlank(skipIsNullShortLink)) {
             return;
         }
         RLock lock = redissonClient.getLock(String.format(LOCK_SKIP_SHORT_LINK_KEY, fullShortUrl));
