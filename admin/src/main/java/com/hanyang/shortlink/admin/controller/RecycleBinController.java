@@ -3,6 +3,7 @@ package com.hanyang.shortlink.admin.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hanyang.shortlink.admin.common.convention.result.Result;
 import com.hanyang.shortlink.admin.common.convention.result.Results;
+import com.hanyang.shortlink.admin.dto.req.RecycleBinRemoveReqDTO;
 import com.hanyang.shortlink.admin.dto.req.RecycleBinRestoreReqDTO;
 import com.hanyang.shortlink.admin.dto.req.RecycleBinSaveReqDTO;
 import com.hanyang.shortlink.admin.remote.ShortLinkRemoteService;
@@ -53,6 +54,15 @@ public class RecycleBinController {
     @PostMapping("/api/short-link/admin/v1/recycle-bin/restore")
     public Result<Void> restoreRecycleBin(@RequestBody RecycleBinRestoreReqDTO requestParam){
         shortLinkRemoteService.restoreRecycleBin(requestParam);
+        return Results.success();
+    }
+
+    /**
+     * 移除短链接
+     */
+    @PostMapping("/api/short-link/admin/v1/recycle-bin/remove")
+    public Result<Void> removeRecycleBin(@RequestBody RecycleBinRemoveReqDTO requestParam) {
+        shortLinkRemoteService.removeRecycleBin(requestParam);
         return Results.success();
     }
 }
