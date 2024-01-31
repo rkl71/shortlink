@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * 地区统计访问实体
+ */
 @Data
 @Builder
 @TableName("t_link_locale_stats")
