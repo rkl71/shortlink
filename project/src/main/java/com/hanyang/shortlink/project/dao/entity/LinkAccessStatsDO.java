@@ -2,16 +2,21 @@ package com.hanyang.shortlink.project.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.hanyang.shortlink.project.common.database.BaseDO;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+
 
 /**
  * 短链接基础访问监控实体
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("t_link_access_stats")
 public class LinkAccessStatsDO extends BaseDO {
     /**
