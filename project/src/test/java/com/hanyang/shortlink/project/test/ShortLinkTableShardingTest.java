@@ -16,12 +16,15 @@ public class ShortLinkTableShardingTest {
                     "  `valid_date_type` tinyint(1) DEFAULT NULL COMMENT '有效期类型 0：永久有效 1：用户自定义',\n" +
                     "  `valid_date` datetime DEFAULT NULL COMMENT '有效期',\n" +
                     "  `describe` varchar(1024) DEFAULT NULL COMMENT '描述',\n" +
+                    "  `total_pv` int(11) DEFAULT NULL COMMENT '历史PV',\n" +
+                    "  `total_uv` int(11) DEFAULT NULL COMMENT '历史UV',\n" +
+                    "  `total_uip` int(11) DEFAULT NULL COMMENT '历史UIP',\n" +
                     "  `create_time` datetime DEFAULT NULL COMMENT '创建时间',\n" +
                     "  `update_time` datetime DEFAULT NULL COMMENT '修改时间',\n" +
                     "  `del_flag` tinyint(1) DEFAULT NULL COMMENT '删除标识 0：未删除 1：已删除',\n" +
                     "  PRIMARY KEY (`id`),\n" +
                     "  UNIQUE KEY `idx_unique_full_short_url` (`full_short_url`) USING BTREE\n" +
-                    ") ENGINE=InnoDB AUTO_INCREMENT = 1748975886061195266 DEFAULT CHARSET=utf8mb4;";
+                    ") ENGINE=InnoDB CHARSET=utf8mb4;";
 
 
     public static void main(String[] args) {
