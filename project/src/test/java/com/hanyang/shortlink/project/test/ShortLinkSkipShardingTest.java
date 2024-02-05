@@ -10,7 +10,6 @@ public class ShortLinkSkipShardingTest {
                     "  UNIQUE KEY `idx_unique_full_short_url` (`full_short_url`) USING BTREE\n" +
                     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 
-
     public static void main(String[] args) {
         for (int i = 0; i < 16; i++) {
             System.out.printf((SQL) + "%n", i);

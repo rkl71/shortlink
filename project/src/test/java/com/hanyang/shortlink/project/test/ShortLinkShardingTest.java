@@ -1,6 +1,6 @@
 package com.hanyang.shortlink.project.test;
 
-public class ShortLinkTableShardingTest {
+public class ShortLinkShardingTest {
 
     public static final String SQL = "CREATE TABLE `t_link_%d`  (\n" +
                     "  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',\n" +
