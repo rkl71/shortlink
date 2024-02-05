@@ -10,4 +10,4 @@ CREATE TABLE `t_link_access_logs` (
                                       `update_time` datetime DEFAULT NULL COMMENT '修改时间',
                                       `del_flag` tinyint(1) DEFAULT NULL COMMENT '删除标识 0：未删除 1：已删除',
                                       PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

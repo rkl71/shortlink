@@ -10,5 +10,5 @@ CREATE TABLE `t_link_stats_today` (
                                       `update_time` datetime DEFAULT NULL COMMENT '修改时间',
                                       `del_flag` tinyint(1) DEFAULT NULL COMMENT '删除标识 0：未删除 1：已删除',
                                       PRIMARY KEY (`id`),
-                                      UNIQUE KEY `idx_unique_full-short-url` (`full_short_url`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+                                      UNIQUE KEY `idx_unique_full-short-url` (`full_short_url`, `gid`, `date`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
