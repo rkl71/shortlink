@@ -1,32 +1,26 @@
 package com.hanyang.shortlink.project.dto.req;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
- * 短链接创建请求对象
+ * 短链接批量创建请求对象
  */
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class ShortLinkCreateReqDTO {
+public class ShortLinkBatchCreateReqDTO {
 
     /**
-     * 域名
+     * 原始链接集合
      */
-    private String domain;
+    private List<String> originUrls;
 
     /**
-     * 原始链接
+     * 描述集合
      */
-    private String originUrl;
+    private List<String> describes;
 
     /**
      * 分组标识
@@ -48,10 +42,4 @@ public class ShortLinkCreateReqDTO {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date validDate;
-
-    /**
-     * 描述
-     */
-    @TableField("`describe`")
-    private String describe;
 }
