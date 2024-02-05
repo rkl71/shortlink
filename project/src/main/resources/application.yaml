@@ -24,6 +24,15 @@ short-link:
     locale:
       amap-key: 38239d9970d3655b3d1c7fed6a54d99c
 
+skip-domain:
+  white-list:
+    enable: true
+    names: '知乎,掘金,博客园'
+    details:
+      - zhihu.com
+      - juejin.cn
+      - cnblogs.com
+
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
