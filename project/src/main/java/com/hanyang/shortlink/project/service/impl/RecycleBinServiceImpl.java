@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hanyang.shortlink.project.dao.entity.ShortLinkDO;
 import com.hanyang.shortlink.project.dao.mapper.ShortLinkMapper;
 import com.hanyang.shortlink.project.dto.req.RecycleBinRemoveReqDTO;
-import com.hanyang.shortlink.project.dto.req.RecycleBinRestoreReqDTO;
+import com.hanyang.shortlink.project.dto.req.RecycleBinRecoverReqDTO;
 import com.hanyang.shortlink.project.dto.req.RecycleBinSaveReqDTO;
 import com.hanyang.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.hanyang.shortlink.project.dto.resp.ShortLinkPageRespDTO;
@@ -60,7 +60,7 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
     }
 
     @Override
-    public void restoreRecycleBin(RecycleBinRestoreReqDTO requestParam) {
+    public void recoverRecycleBin(RecycleBinRecoverReqDTO requestParam) {
         LambdaUpdateWrapper<ShortLinkDO> updateWrapper = Wrappers.lambdaUpdate(ShortLinkDO.class)
                 .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
                 .eq(ShortLinkDO::getGid, requestParam.getGid())

@@ -1,4 +1,4 @@
-package com.hanyang.shortlink.project.dto.req;
+package com.hanyang.shortlink.admin.dto.req;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * 回收站恢复功能
  */
 @Data
-public class RecycleBinRestoreReqDTO {
+public class RecycleBinRecoverReqDTO {
 
     /**
      * 分组标识
