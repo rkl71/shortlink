@@ -97,8 +97,8 @@ public class ShortLinkStatsSaveConsumer implements StreamListener<String, MapRec
             if (StrUtil.isBlank(gid)) {
                 LambdaQueryWrapper<ShortLinkSkipDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkSkipDO.class)
                         .eq(ShortLinkSkipDO::getFullShortUrl, fullShortUrl);
-                ShortLinkSkipDO shortLinkGotoDO = shortLinkSkipMapper.selectOne(queryWrapper);
-                gid = shortLinkGotoDO.getGid();
+                ShortLinkSkipDO shortLinkSkipDO = shortLinkSkipMapper.selectOne(queryWrapper);
+                gid = shortLinkSkipDO.getGid();
             }
             int hour = DateUtil.hour(new Date(), true);
             Week week = DateUtil.dayOfWeekEnum(new Date());
