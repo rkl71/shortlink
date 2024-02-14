@@ -28,8 +28,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = {
         "com.hanyang.shortlink.admin",
-        "com.hanyang.shortlink.project",
-        "com.hanyang.shortlink.aggregation"
+        "com.hanyang.shortlink.project"
 })
 @MapperScan(value = {
         "com.hanyang.shortlink.project.dao.mapper",
